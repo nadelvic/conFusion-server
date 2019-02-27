@@ -35,7 +35,7 @@ const dishSchema = new Schema({
     comments: [ commentSchema ],
     image: {
         type: String,
-        require: true
+        required: true
     },
     category: {
         type: String,

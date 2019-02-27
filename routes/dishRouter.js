@@ -11,10 +11,10 @@ dishRouter.use(bodyParser.json());
 dishRouter.route('/') // declaring the end point one single location
 .get((req,res,next) => {
 	Dishes.find({})
-		.then((dish) => {
+		.then((dishes) => {
 			res.StatusCode = 200;
 			res.setHeader('Content-Type', 'application/json');
-			res.json(dish);
+			res.json(dishes);
 		}, (err) => next(err))
 		.catch((err) => next(err));
 })
@@ -46,10 +46,10 @@ dishRouter.route('/') // declaring the end point one single location
 dishRouter.route('/:dishId')
 .get((req,res,next) => {
 	Dishes.findById(req.params.dishId)
-	.then((dishes) => {
+	.then((dish) => {
 		res.StatusCode = 200;
 		res.setHeader('Content-Type', 'application/json');
-		res.json(dishes);
+		res.json(dish);
 	}, (err) => next(err))
 	.catch((err) => next(err));
 })
@@ -79,10 +79,6 @@ dishRouter.route('/:dishId')
 	.catch((err) => next(err));
 });
 
-module.exports = dishRouter;
-
-
-//////////////////////////////
 
 dishRouter.route('/:dishId/comments')
 .get((req,res,next) => {
