@@ -2,6 +2,7 @@ var express = require('express');
 const bodyParser = require('body-parser');
 var User = require('../models/user');
 var passport = require('passport');
+var authenticate = require('../authenticate');
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -31,10 +32,15 @@ router.post('/signup', (req,res,next) => {
   });
 });
 
+// we create a token here and pass it back to the user.
 router.post('/login', passport.authenticate('local'), (req,res) => {
+
+  // user id is enough as a payload. the id is enough to search for the user.
+  // so the client will include the token in every subsequant query.
+  var token = authenticate.getToken({_id: req.user._id}); 
   res.statusCode = 200;
   res.setHeader('Content-Type','application/json');
-  res.json({success:true, status: 'You are Successfully logged in'});
+  res.json({success:true, token: token, status: 'You are Successfully logged in'});
 });
 
 router.get('/logout', (req,res) => {
