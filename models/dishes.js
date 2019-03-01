@@ -17,7 +17,6 @@ const commentSchema = new Schema({
     author: {
         type:mongoose.Schema.Types.ObjectId,
         ref: 'User', // reference to the id of a user.
-        required: true
     }
 },{
     timestamps:true
