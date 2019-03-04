@@ -31,6 +31,18 @@ connect.then((db) => {
 
 var app = express();
 
+app.all('*', (req,res,next) => {
+  if(req.secure) {
+    return next();
+  }
+  else {
+    // 307 represent the target resource reside temporalily in a different URL
+    // the user agent must not change the request method if it reforms in automatic rediretion to that URL
+    // it'll expect hte user agent to retry with the same method that hte have used for the original end point.
+    res.redirect(307,'https://' + req.hostname + ':' + app.get('secPort') + req.url);
+  }
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
