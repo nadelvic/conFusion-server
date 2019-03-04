@@ -3,12 +3,13 @@ const bodyParser = require('body-parser');
 var User = require('../models/user');
 var passport = require('passport');
 var authenticate = require('../authenticate');
+const cors = require('./cors');
 
 var router = express.Router();
 router.use(bodyParser.json());
 
 /* GET users listing. */
-router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
   // here on the /users endpoint we display only for the admin all the users information.
   User.find({})
   .then((users) => {
@@ -19,7 +20,7 @@ router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, (req, res, ne
   .catch((err) => next(err));
 });
 
-router.post('/signup', (req,res,next) => {
+router.post('/signup', cors.corsWithOptions, (req,res,next) => {
   User.register(new User({username: req.body.username}), 
       req.body.password,
       (err,user) => {
@@ -48,7 +49,7 @@ router.post('/signup', (req,res,next) => {
 });
 
 // we create a token here and pass it back to the user.
-router.post('/login', passport.authenticate('local'), (req,res) => {
+router.post('/login', cors.corsWithOptions, passport.authenticate('local'), (req,res) => {
 
   // user id is enough as a payload. the id is enough to search for the user.
   // so the client will include the token in every subsequant query.
@@ -58,7 +59,7 @@ router.post('/login', passport.authenticate('local'), (req,res) => {
   res.json({success:true, token: token, status: 'You are Successfully logged in'});
 });
 
-router.get('/logout', (req,res,next) => {
+router.get('/logout', cors.corsWithOptions, (req,res,next) => {
   if(req.session){
       req.session.destroy();
       res.clearCookie('session-id');
